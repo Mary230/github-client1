@@ -8,9 +8,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Header from "./Components/header";
 
+
 const GET_REPOSITORIES_OF_ORGANIZATION = gql`
+query qq($login : String!)
   {
-    organization(login: "google") {
+    organization(login: $login) {
       repositories(first: 15) {
         edges {
           node {
@@ -25,6 +27,8 @@ const GET_REPOSITORIES_OF_ORGANIZATION = gql`
   }
 `;
 
+const log = "google";
+
 const STAR_REPOSITORY = gql`
   mutation($id: ID!) {
     addStar(input: { starrableId: $id }) {
@@ -37,7 +41,7 @@ const STAR_REPOSITORY = gql`
 `;
 
 const App = () => (
-  <Query query={GET_REPOSITORIES_OF_ORGANIZATION}>
+  <Query query={GET_REPOSITORIES_OF_ORGANIZATION} variables={{ login : log }} >
     {({ data: { organization }, loading }) => {
       if (loading || !organization) {
         return <div>Loading ...</div>;
@@ -138,5 +142,7 @@ const Select = ({ id, isSelected, toggleSelectRepository }) => (
     {isSelected ? 'Unselect' : 'Select'}
   </button>
 );
+
+
 
 export default App;

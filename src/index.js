@@ -4,10 +4,16 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 import App from './App';
 
 import registerServiceWorker from './registerServiceWorker';
+import NotFound from "./Components/NotFound";
 
 const cache = new InMemoryCache();
 
@@ -29,7 +35,14 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <Router>
+      <Switch>
+        <Route exact path="/" component={App} />
+        <Route path="/profile" children={()=><h2>profile</h2>} />
+        <Route path="/contact" children={()=><h2>Contact</h2>} />
+        <Route component={NotFound}/>
+      </Switch>
+    </Router>
   </ApolloProvider>,
   document.getElementById('root'),
 );
