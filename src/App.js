@@ -1,13 +1,17 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
+import "./index.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import './App.css';
+import Header from "./Components/header";
 
 const GET_REPOSITORIES_OF_ORGANIZATION = gql`
   {
-    organization(login: "the-road-to-learn-react") {
-      repositories(first: 20) {
+    organization(login: "google") {
+      repositories(first: 15) {
         edges {
           node {
             id
@@ -40,11 +44,17 @@ const App = () => (
       }
 
       return (
+        <div>
+          <Header/>
         <Repositories repositories={organization.repositories} />
+        </div>
+
       );
     }}
   </Query>
 );
+
+
 
 class Repositories extends React.Component {
   state = {
@@ -77,35 +87,42 @@ const RepositoryList = ({
   selectedRepositoryIds,
   toggleSelectRepository,
 }) => (
-  <ul>
+
+  <div className="card-columns cardContainer">
     {repositories.edges.map(({ node }) => {
       const isSelected = selectedRepositoryIds.includes(node.id);
 
-      const rowClassName = ['row'];
+      const rowClassName = ['card-body'];
 
       if (isSelected) {
         rowClassName.push('row_selected');
       }
 
       return (
-        <li className={rowClassName.join(' ')} key={node.id}>
-          <Select
-            id={node.id}
-            isSelected={isSelected}
-            toggleSelectRepository={toggleSelectRepository}
-          />{' '}
-          <a href={node.url}>{node.name}</a>{' '}
-          {!node.viewerHasStarred && <Star id={node.id} />}
-        </li>
+          <div className="card repoCard" >
+            <div className={rowClassName.join(' ')} key={node.id}>
+              <h5 className="card-title">{node.name}</h5>
+              <a href={node.url} className="card-link">{node.name}</a>{' '}<p/>
+                <Select
+                  id={node.id}
+                  isSelected={isSelected}
+                  toggleSelectRepository={toggleSelectRepository}
+                />{' '}
+
+                {!node.viewerHasStarred && <Star id={node.id} />}
+
+            </div>
+          </div>
+
       );
     })}
-  </ul>
+  </div>
 );
 
 const Star = ({ id }) => (
   <Mutation mutation={STAR_REPOSITORY} variables={{ id }}>
     {starRepository => (
-      <button type="button" onClick={starRepository}>
+      <button type="button" className="btn btn-outline-danger" onClick={starRepository}>
         Star
       </button>
     )}
@@ -115,6 +132,7 @@ const Star = ({ id }) => (
 const Select = ({ id, isSelected, toggleSelectRepository }) => (
   <button
     type="button"
+    className="btn btn-light"
     onClick={() => toggleSelectRepository(id, isSelected)}
   >
     {isSelected ? 'Unselect' : 'Select'}

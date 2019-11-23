@@ -1,15 +1,12 @@
-.row {
-  padding: 5px;
-}
 
-.row:hover {
+.card-body:hover {
   background-color: lightblue;
 }
 
 .row_selected {
-  background-color: orange;
+  background-color: #ffacac;
 }
 
 .row_selected:hover {
-  background-color: orange;
+  background-color: #ffacac;
 }
